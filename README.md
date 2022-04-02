@@ -41,7 +41,7 @@ await getAccessToken()
 ### Installation instructions
 
 1. Install [NodeJS](https://nodejs.org/).
-2. Download the bot via [this link](https://github.com/PlaceNL/Bot/archive/refs/heads/master.zip).
+2. Download the bot via [this link](https://github.com/Bilaboz/Bot/archive/refs/heads/master.zip).
 3. Extract the bot anywhere on your desktop
 4. Open a command prompt/terminal in this folder
     Windows: Shift+right mousebutton in the folder -> Click on "open Powershell here"
@@ -55,7 +55,7 @@ await getAccessToken()
 
 # PlaceNL Bot
 
-De bot voor PlaceNL! Deze bot verbindt met de [commando server](https://github.com/PlaceNL/Commando) en krijgt daar order van. De ordergeschiedenis kan je [hier](https://placenl.noahvdaa.me/) bekijken.
+De bot voor PlaceNL! Deze bot verbindt met de [commando server](https://github.com/PlaceNL/Commando) en krijgt daar order van. De ordergeschiedenis kan je [hier](https://place.bilaboz.me/) bekijken.
 
 ## User script bot
 
