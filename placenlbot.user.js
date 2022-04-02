@@ -104,7 +104,7 @@ let getPendingWork = (work, rgbaOrder, rgbaCanvas) => {
 
 function connectSocket() {
     Toastify({
-        text: 'Connecting to the server...',
+        text: 'Connecting to 42 server...',
         duration: 10000
     }).showToast();
 
@@ -112,7 +112,7 @@ function connectSocket() {
 
     socket.onopen = function () {
         Toastify({
-            text: 'Connected to the server!',
+            text: 'Connected to 42 server!',
             duration: 10000
         }).showToast();
         socket.send(JSON.stringify({ type: 'getmap' }));
@@ -129,13 +129,13 @@ function connectSocket() {
         switch (data.type.toLowerCase()) {
             case 'map':
                 Toastify({
-                    text: `Nieuwe map laden (reden: ${data.reason ? data.reason : 'verbonden met server'})...`,
+                    text: `New map loaded (reason: ${data.reason ? data.reason : 'connected to server'})...`,
                     duration: 10000
                 }).showToast();
                 currentOrderCtx = await getCanvasFromUrl(`https://${serverURL}/maps/${data.data}`, currentOrderCanvas);
                 order = getRealWork(currentOrderCtx.getImageData(0, 0, 2000, 1000).data);
                 Toastify({
-                    text: `Nieuwe map geladen, ${order.length} pixels in totaal`,
+                    text: `New map loaded, ${order.length} pixels in total`,
                     duration: 10000
                 }).showToast();
                 break;
@@ -146,10 +146,10 @@ function connectSocket() {
 
     socket.onclose = function (e) {
         Toastify({
-            text: `Server has disconnected: ${e.reason}`,
+            text: `42 server disconnected: ${e.reason}`,
             duration: 10000
         }).showToast();
-        console.error('Socketfout: ', e.reason);
+        console.error('Socket error: ', e.reason);
         socket.close();
         setTimeout(connectSocket, 1000);
     };
@@ -165,7 +165,7 @@ async function attemptPlace() {
         ctx = await getCanvasFromUrl(await getCurrentImageUrl('0'), currentPlaceCanvas, 0, 0);
         ctx = await getCanvasFromUrl(await getCurrentImageUrl('1'), currentPlaceCanvas, 1000, 0)
     } catch (e) {
-        console.warn('Fout bij ophalen map: ', e);
+        console.warn('Error retrieving map: ', e);
         Toastify({
             text: 'Error retrieving map. Retrying in 10 sec...',
             duration: 10000
@@ -180,7 +180,7 @@ async function attemptPlace() {
 
     if (work.length === 0) {
         Toastify({
-            text: `All pixels are already in the right place!`,
+            text: `All pixels are already in the right place! Trying again in 30 sec....`,
             duration: 30000
         }).showToast();
         setTimeout(attemptPlace, 30000); // probeer opnieuw in 30sec.
@@ -195,7 +195,7 @@ async function attemptPlace() {
     const hex = rgbaOrderToHex(i, rgbaOrder);
 
     Toastify({
-        text: `Trying to place pixel to ${x}, ${y}... (${percentComplete}% complete)`,
+        text: `Trying to place pixel at ${x}, ${y}... (${percentComplete}% complete)`,
         duration: 10000
     }).showToast();
 
@@ -217,7 +217,7 @@ async function attemptPlace() {
             const nextPixelDate = new Date(nextPixel);
             const delay = nextPixelDate.getTime() - Date.now();
             Toastify({
-                text: `Pixel place on ${x}, ${y}! Next pixel will be placed at ${nextPixelDate.toLocaleTimeString()}.`,
+                text: `Pixel placed too soon! Next pixel can be placed at ${nextPixelDate.toLocaleTimeString()}.`,
                 duration: delay
             }).showToast();
             setTimeout(attemptPlace, delay);
@@ -225,7 +225,7 @@ async function attemptPlace() {
     } catch (e) {
         console.warn('Fout bij response analyseren', e);
         Toastify({
-            text: `Fout bij response analyseren: ${e}.`,
+            text: `Error analyzing response: ${e}.`,
             duration: 10000
         }).showToast();
         setTimeout(attemptPlace, 10000);
@@ -330,7 +330,7 @@ function getCanvasFromUrl(url, canvas, x = 0, y = 0) {
             };
             img.onerror = () => {
                 Toastify({
-                    text: 'Error fetching map...',
+                    text: 'Error on map retrieval. Retrying in 3 sec...',
                     duration: 3000
                 }).showToast();
                 setTimeout(() => loadImage(ctx), 3000);
