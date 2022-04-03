@@ -159,7 +159,7 @@ function connectSocket() {
 
 async function attemptPlace() {
     if (order === undefined) {
-        setTimeout(attemptPlace, 2000); // probeer opnieuw in 2sec.
+        setTimeout(attemptPlace, 2000); // Try again in 2s
         return;
     }
     var ctx;
@@ -172,7 +172,7 @@ async function attemptPlace() {
             text: 'Error retrieving map. Retrying in 10 sec...',
             duration: 10000
         }).showToast();
-        setTimeout(attemptPlace, 10000); // probeer opnieuw in 10sec.
+        setTimeout(attemptPlace, 10000); // Try again in 10s
         return;
     }
 
@@ -185,7 +185,7 @@ async function attemptPlace() {
             text: `All pixels are already in the right place! Trying again in 30 sec....`,
             duration: 30000
         }).showToast();
-        setTimeout(attemptPlace, 30000); // probeer opnieuw in 30sec.
+        setTimeout(attemptPlace, 30000); // Try again in 30s
         return;
     }
 
