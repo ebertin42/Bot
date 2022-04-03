@@ -30,6 +30,16 @@ before you start, make sure your cooldown has run out!
 
 ### Installation instructions
 
+#### With Docker
+
+1. Install [Docker](https://docs.docker.com/engine/install/) and [docker-compose](https://docs.docker.com/compose/install/).
+2. Clone this repository.
+3. Complete your `.env` file following [example.env](./example.env).
+4. Run `docker-compose up -d` (Check that the bot is running correctly using `docker-compose logs`)
+5. BONUS: You can edit the [docker-compose.yml](./docker-compose.yml) file to add more accounts easily.
+
+#### Without Docker
+
 1. Install [NodeJS](https://nodejs.org/).
 2. Download the bot via [this link](https://github.com/Bilaboz/Bot/archive/refs/heads/master.zip).
 3. Extract the bot anywhere on your desktop
