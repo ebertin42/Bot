@@ -55,9 +55,11 @@ const COLOR_MAPPINGS = {
 
 let getRealWork = rgbaOrder => {
     let order = [];
+	let j = 0;
     for (var i = 0; i < 2000000; i++) {
-        if (rgbaOrder[(i * 4) + 3] !== 0) {
-            order.push(i);
+		j = (i * 2000) % 2000000 + Math.floor((i * 2000) / 2000000);
+        if (rgbaOrder[(j * 4) + 3] !== 0) {
+            order.push(j);
         }
     }
     return order;
