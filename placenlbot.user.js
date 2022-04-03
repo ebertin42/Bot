@@ -106,7 +106,7 @@ let getPendingWork = (work, rgbaOrder, rgbaCanvas) => {
 
 function connectSocket() {
     Toastify({
-        text: 'Connecting to 42 server...',
+        text: 'Connecting to Unex server...',
         duration: 10000
     }).showToast();
 
@@ -148,7 +148,7 @@ function connectSocket() {
 
     socket.onclose = function (e) {
         Toastify({
-            text: `42 server disconnected: ${e.reason}`,
+            text: `Unex server disconnected: ${e.reason}`,
             duration: 10000
         }).showToast();
         console.error('Socket error: ', e.reason);
