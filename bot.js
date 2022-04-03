@@ -58,7 +58,7 @@ const COLOR_MAPPINGS = {
 })();
 
 function connectSocket() {
-    console.log('Verbinden met PlaceNL server...')
+    console.log('Connecting to 42 server...')
 
     socket = new WebSocket('wss://place.bilaboz.me/api/ws');
 
@@ -67,7 +67,7 @@ function connectSocket() {
     }
 
     socket.onopen = function () {
-        console.log('Verbonden met PlaceNL server!')
+        console.log('Connected to 42 server!!')
         socket.send(JSON.stringify({ type: 'getmap' }));
     };
 
@@ -81,7 +81,7 @@ function connectSocket() {
 
         switch (data.type.toLowerCase()) {
             case 'map':
-                console.log(`Nieuwe map geladen (reden: ${data.reason ? data.reason : 'verbonden met server'})`)
+                console.log(`New map loaded (reason: ${data.reason ? data.reason : 'connected to server'})...`)
                 currentOrders = await getMapFromUrl(`https://place.bilaboz.me/maps/${data.data}`);
                 hasOrders = true;
                 break;
@@ -91,8 +91,8 @@ function connectSocket() {
     };
 
     socket.onclose = function (e) {
-        console.warn(`PlaceNL server heeft de verbinding verbroken: ${e.reason}`)
-        console.error('Socketfout: ', e.reason);
+        console.warn(`42 server disconnect: ${e.reason}`)
+        console.error('Socket error: ', e.reason);
         socket.close();
         setTimeout(connectSocket, 1000);
     };
@@ -100,7 +100,7 @@ function connectSocket() {
 
 async function attemptPlace() {
     if (!hasOrders) {
-        setTimeout(attemptPlace, 2000); // probeer opnieuw in 2sec.
+        setTimeout(attemptPlace, 2000); // Try again in 2s
         return;
     }
     
@@ -110,8 +110,8 @@ async function attemptPlace() {
         map0 = await getMapFromUrl(await getCurrentImageUrl('0'))
         map1 = await getMapFromUrl(await getCurrentImageUrl('1'));
     } catch (e) {
-        console.warn('Fout bij ophalen map: ', e);
-        setTimeout(attemptPlace, 15000); // probeer opnieuw in 15sec.
+        console.warn('Error retrieving map: ', e);
+        setTimeout(attemptPlace, 15000); // Try again in 15s
         return;
     }
 
@@ -119,16 +119,16 @@ async function attemptPlace() {
     const rgbaCanvas = [].concat(map0.data, map1.data);
 
     for (const i of order) {
-        // negeer lege order pixels.
+        // Ignore empty order pixels
         if (rgbaOrder[(i * 4) + 3] === 0) continue;
 
         const hex = rgbToHex(rgbaOrder[(i * 4)], rgbaOrder[(i * 4) + 1], rgbaOrder[(i * 4) + 2]);
-        // Deze pixel klopt.
+        // This pixel is correct
         if (hex === rgbToHex(rgbaCanvas[(i * 4)], rgbaCanvas[(i * 4) + 1], rgbaCanvas[(i * 4) + 2])) continue;
 
         const x = i % 2000;
         const y = Math.floor(i / 2000);
-        console.log(`Pixel proberen te plaatsen op ${x}, ${y}...`)
+        console.log(`Trying to place pixel at ${x}, ${y}...`)
 
         const res = await place(x, y, COLOR_MAPPINGS[hex]);
         const data = await res.json();
@@ -138,25 +138,25 @@ async function attemptPlace() {
                 const nextPixel = error.extensions.nextAvailablePixelTs + 3000;
                 const nextPixelDate = new Date(nextPixel);
                 const delay = nextPixelDate.getTime() - Date.now();
-                console.log(`Pixel te snel geplaatst! Volgende pixel wordt geplaatst om ${nextPixelDate.toLocaleTimeString()}.`)
+                console.log(`Pixel placed too soon! Next pixel should be placed at ${nextPixelDate.toLocaleTimeString()}.`)
                 setTimeout(attemptPlace, delay);
             } else {
                 const nextPixel = data.data.act.data[0].data.nextAvailablePixelTimestamp + 3000;
                 const nextPixelDate = new Date(nextPixel);
                 const delay = nextPixelDate.getTime() - Date.now();
-                console.log(`Pixel geplaatst op ${x}, ${y}! Volgende pixel wordt geplaatst om ${nextPixelDate.toLocaleTimeString()}.`)
+                console.log(`Pixel placed on ${x}, ${y}! Next pixel will be placed at ${nextPixelDate.toLocaleTimeString()}.`)
                 setTimeout(attemptPlace, delay);
             }
         } catch (e) {
-            console.warn('Fout bij response analyseren', e);
+            console.warn('Error in response analysis', e);
             setTimeout(attemptPlace, 10000);
         }
 
         return;
     }
 
-    console.log(`Alle pixels staan al op de goede plaats! Opnieuw proberen in 30 sec...`)
-    setTimeout(attemptPlace, 30000); // probeer opnieuw in 30sec.
+    console.log(`All pixels are already in the right place! Try again in 30 sec....`)
+    setTimeout(attemptPlace, 30000); // Try again in 30s
 }
 
 function place(x, y, color) {
