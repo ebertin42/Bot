@@ -32,8 +32,9 @@ var currentOrders;
 
 var order = [];
 for (var i = 0; i < 2000000; i++) {
-    order.push((i * 2000) % 2000000 + Math.floor((i * 2000) / 2000000));
+    order.push(i);
 }
+
 
 const COLOR_MAPPINGS = {
 	'#BE0039': 1,
