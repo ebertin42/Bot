@@ -2,15 +2,28 @@ import fetch from 'node-fetch';
 import getPixels from "get-pixels";
 import WebSocket from 'ws';
 import ndarray from "ndarray";
+import snoowrap from "snoowrap";
+
 
 const args = process.argv.slice(2);
 
-if (args.length != 1 && !process.env.ACCESS_TOKEN) {
-    console.error("Missing access token.")
-    process.exit(1);
-}
+// if (args.length != 1 && !process.env.ACCESS_TOKEN) {
+//     console.error("Missing access token.")
+//     process.exit(1);
+// }
 
 let accessToken = process.env.ACCESS_TOKEN || args[0];
+const reddit = new snoowrap({
+    clientId: process.env.REDDIT_CLIENT_ID,
+    clientSecret: process.env.REDDIT_CLIENT_SECRET,
+    username: process.env.REDDIT_USERNAME,
+    password: process.env.REDDIT_PASSWORD,
+    userAgent: "Mozilla/5.0 (X11; Linux x86_64; rv:98.0) Gecko/20100101 Firefox/98.0",
+})
+
+async function updateToken() {
+    accessToken = await reddit.updateAccessToken()
+}
 
 var socket;
 var hasOrders = false;
@@ -105,7 +118,10 @@ async function attemptPlace() {
         setTimeout(attemptPlace, 2000); // probeer opnieuw in 2sec.
         return;
     }
-    
+
+    // Only updates token if needed
+    await updateToken()
+
     var map0;
     var map1;
     try {
