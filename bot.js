@@ -122,10 +122,9 @@ async function attemptPlace() {
     // Only updates token if needed
     await updateToken()
 
-    var map0;
-    var map1;
+    let map0, map1;
     try {
-        map0 = await getMapFromUrl(await getCurrentImageUrl('0'))
+        map0 = await getMapFromUrl(await getCurrentImageUrl('0'));
         map1 = await getMapFromUrl(await getCurrentImageUrl('1'));
     } catch (e) {
         console.warn('Error retrieving map: ', e);
@@ -137,15 +136,21 @@ async function attemptPlace() {
     const rgbaCanvas = [].concat(map0.data, map1.data);
 
     for (const i of order) {
-        // Ignore empty order pixels
-        if (rgbaOrder[(i * 4) + 3] === 0) continue;
-
-        const hex = rgbToHex(rgbaOrder[(i * 4)], rgbaOrder[(i * 4) + 1], rgbaOrder[(i * 4) + 2]);
-        // This pixel is correct
-        if (hex === rgbToHex(rgbaCanvas[(i * 4)], rgbaCanvas[(i * 4) + 1], rgbaCanvas[(i * 4) + 2])) continue;
-
         const x = i % 2000;
         const y = Math.floor(i / 2000);
+
+        let canvasIndex = Math.floor(x / 1000)
+        let ci = x - (1000 * canvasIndex) + (y * 1000)
+
+        // Ignore empty pixels...
+        if (rgbaOrder[(i * 4) + 3] === 0) continue;
+
+        const hex = getPixelHex(rgbaOrder, i);
+        const canvasHex = getPixelHex(rgbaCanvas[canvasIndex], ci)
+
+        // Correct pixel
+        if (hex === canvasHex) continue;
+
         console.log(`Trying to place pixel at ${x}, ${y}...`)
 
         const res = await place(x, y, COLOR_MAPPINGS[hex]);
@@ -274,6 +279,10 @@ function getMapFromUrl(url) {
             resolve(pixels)
         })
     });
+}
+
+function getPixelHex (rgbaCanvas, i) {
+    return rgbToHex(rgbaCanvas[(i * 4)], rgbaCanvas[(i * 4) + 1], rgbaCanvas[(i * 4) + 2])
 }
 
 function rgbToHex(r, g, b) {
