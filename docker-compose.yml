@@ -13,12 +13,22 @@ x-common:
   tty: true
   stdin_open: true
 
+x-bot-service:
+  &x-bot-service
+  <<: *x-common
+
+  image: r/place-bot
+  build:
+    context: .
+
+  command: node bot.js
+
 services:
   bot:
-    <<: *x-common
+    <<: *x-bot-service
 
-    image: r/place-bot
-    build:
-      context: .
-
-    command: node bot.js
+# Add more instances with more env files if you have multiple accounts
+#  bot2:
+#    <<: *x-bot-service
+#    env_file:
+#      - ".env2"
