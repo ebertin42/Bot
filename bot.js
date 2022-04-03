@@ -7,12 +7,13 @@ import snoowrap from "snoowrap";
 
 const args = process.argv.slice(2);
 
-// if (args.length != 1 && !process.env.ACCESS_TOKEN) {
-//     console.error("Missing access token.")
-//     process.exit(1);
-// }
 
-let accessToken = process.env.ACCESS_TOKEN || args[0];
+if (!process.env.REDDIT_CLIENT_ID || !process.env.REDDIT_CLIENT_SECRET || !process.env.REDDIT_PASSWORD || !process.env.REDDIT_USERNAME) {
+    console.error("Please setup your environment completely.")
+    process.exit(1)
+}
+
+let accessToken = ""
 const reddit = new snoowrap({
     clientId: process.env.REDDIT_CLIENT_ID,
     clientSecret: process.env.REDDIT_CLIENT_SECRET,
