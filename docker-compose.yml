@@ -1,0 +1,24 @@
+version: "3.5"
+
+x-common:
+  &x-common
+  env_file:
+    - ".env"
+
+  logging:
+    options:
+      max-file: "5"
+      max-size: 10m
+
+  tty: true
+  stdin_open: true
+
+services:
+  bot:
+    <<: *x-common
+
+    image: r/place-bot
+    build:
+      context: .
+
+    command: node bot.js
