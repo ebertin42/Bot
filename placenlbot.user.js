@@ -188,8 +188,7 @@ async function attemptPlace() {
     }
 
     const percentComplete = 100 - Math.ceil(work.length * 100 / order.length);
-    const idx = Math.floor(Math.random() * work.length);
-    const i = work[idx];
+    const i = work[0];
     const x = i % 2000;
     const y = Math.floor(i / 2000);
     const hex = rgbaOrderToHex(i, rgbaOrder);
