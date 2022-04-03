@@ -20,23 +20,13 @@ before you start, make sure your cooldown has run out!
 
 ## Headless bot
 
-### You can get an access token
-1. Go to [r/place](https://www.reddit.com/r/place/)
-2. Open the browser console (F12 -> Click on console)
-3. paste this code and press enter:
-```
-async function getAccessToken() {
-	const usingOldReddit = window.location.href.includes('new.reddit.com');
-	const url = usingOldReddit ? 'https://new.reddit.com/r/place/' : 'https://www.reddit.com/r/place/';
-	const response = await fetch(url);
-	const responseText = await response.text();
-
-	return responseText.split('\"accessToken\":\"')[1].split('"')[0];
-}
-
-await getAccessToken()
-```
-4. The text between quotes (`"`) is your access token.
+### You need to create a reddit script app
+1. Go to [Reddit Applications Page](https://ssl.reddit.com/prefs/apps/)
+2. At the bottom of the page, create a new app
+3. Select `script` type
+![Create App Image](./doc/create_app_doc.png)
+4. Copy the ID and Secret
+![App Secrets Image](./doc/secrets_doc.png)
 
 ### Installation instructions
 
@@ -47,9 +37,10 @@ await getAccessToken()
     Windows: Shift+right mousebutton in the folder -> Click on "open Powershell here"
     Mac: No clue, sorry!
     Linux: Is this neccisary?
-5. install the dependencies: `npm i`
-6. execute the bot `node bot.js ACCESS_TOKEN_HIER`
-7. BONUS: You can repeat these steps for any amount of accounts you'd want. Keep in mind to use different accounts.
+5. Install the dependencies: `npm i`
+6. Setup your env following the [example.env](./example.env)
+7. execute the bot `node bot.js`
+8. BONUS: You can repeat these steps for any amount of accounts you'd want. Keep in mind to use different accounts.
 
 -----
 

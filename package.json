@@ -4,6 +4,7 @@
     "get-pixels": "^3.3.3",
     "node-fetch": "^3.2.3",
     "nodejs-fetch": "^1.0.0",
+    "snoowrap": "^1.23.0",
     "ws": "^8.5.0"
   }
 }
